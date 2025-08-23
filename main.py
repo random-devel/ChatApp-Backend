@@ -7,6 +7,7 @@ from Chat.routes import chat
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
+from Authentication.settings import settings
 from Authentication.MongoODM import (
     UserCred,
     UserInfo,
@@ -37,7 +38,7 @@ app.include_router(chat)
 @app.on_event("startup")
 async def startup_event():
     global client
-    client = AsyncIOMotorClient("mongodb://localhost:27017")
+    client = AsyncIOMotorClient(settings.mongodb_url)
     db = client["users"]
     await init_beanie(
         database=db, # type: ignore
