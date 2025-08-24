@@ -22,7 +22,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://chat-app-frontend-aebb.vercel.app/'],
+    allow_origins=[settings.frontend_url],
     allow_credentials=True,
     allow_methods=["*"],              
     allow_headers=["*"],

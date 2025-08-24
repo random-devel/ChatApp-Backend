@@ -39,10 +39,10 @@ async def CreateUserSession(
     response.set_cookie(
         key,
         value=ID,
-        samesite='none',
+        samesite='lax',
         httponly=True,
         max_age=1800,
-        secure=True,
+        secure=False,
         path='/'
     )
 
@@ -55,9 +55,9 @@ async def CreateSessions(data: dict, response: Response, expiresMinutes: int, ke
             key,
             value=payload,
             max_age=expiresMinutes * 60,
-            samesite='none',
+            samesite='lax',
             httponly=True,
-            secure=True,
+            secure=False,
             path='/'
         )
         if returned is not None:

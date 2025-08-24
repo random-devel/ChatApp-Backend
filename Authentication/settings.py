@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     algorithm: str
     app_password: str
     mongodb_url: str
+    frontend_url: str
 
     class Config:
         env_file = ".env"
