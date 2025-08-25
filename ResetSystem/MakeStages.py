@@ -19,8 +19,8 @@ async def createStageSession(model: Type[Document], key: str, username: str, res
         value=session,
         path='/',
         httponly=True,
-        samesite='lax',
-        secure=False,
+        samesite='none',
+        secure=True,
         max_age=600
     )
 
