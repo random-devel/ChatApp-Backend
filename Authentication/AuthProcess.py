@@ -9,7 +9,8 @@ from .MongoODM import (
         UserCred,
         UserInfo,
         Sessions,
-        AdminSessions
+        AdminSessions,
+        BlockedUsers
     )
 from pymongo.errors import DuplicateKeyError
 from Authentication.DuplicatedOpreations import fetch,insertHandler,updateHandler,delHandler
@@ -20,8 +21,10 @@ async def LoginUser(data: User, response: Response, request: Request):
     if await AuthSessions(request):
         raise HTTPException(302,detail='continue to profile')
 
-    user_dict = await fetch(UserCred,username=data.username)
-    if user_dict:
+    if user_dict:= await fetch(UserCred,username=data.username):
+        if blocked:= await fetch(BlockedUsers,username=user_dict.get('username')):
+            raise HTTPException(401,detail='your account is blocked, wait untill the block removed')
+        
         if not argon2.verify(data.password, user_dict.get('hashed_password')):
             raise HTTPException(status_code=401, detail="Invalid credentials")
         

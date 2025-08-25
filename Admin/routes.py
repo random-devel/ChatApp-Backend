@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from Authentication.AuthProcess import AuthAdmin
-from .AdminServices import UpdateUsersRole, DeleteUsers, fetchUsers, BlockUsers, checkUSER
+from .AdminServices import UpdateUsersRole, fetchUsers, BlockUsers, checkUSER
+from .ValidationModels import BlockUser, UpdateRole
 
 Admin = APIRouter(dependencies=[Depends(AuthAdmin),Depends(checkUSER)])
 
@@ -10,13 +11,9 @@ async def dashboard():
     return count
 
 @Admin.put('/ChangeUsersRole')
-async def updateRole(username:str,role: str):
-    await UpdateUsersRole(username,role)
-    
-@Admin.delete('/DeleteUser')
-async def delUser(username: str):
-    await DeleteUsers(username)
+async def updateRole(Schema: UpdateRole):
+    await UpdateUsersRole(Schema)
 
 @Admin.post('/BlockUser')
-async def block(username: str,days:int,reason:str):
-    await BlockUsers(username,reason,days)
+async def block(Schema: BlockUser):
+    await BlockUsers(Schema)

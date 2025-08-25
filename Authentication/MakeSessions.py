@@ -65,17 +65,6 @@ async def CreateSessions(data: dict, response: Response, expiresMinutes: int, ke
     except JWTError as e:
         raise HTTPException(status_code=501, detail="Session creation failed") from e
 
-def verifyCookieKey(key: str, request: Request) -> tuple[dict, str] | None:
-    """Verifies a cookie by decoding its JWT and optionally checking if it's blocked."""
-    data = request.cookies.get(key)
-    if data:
-        try:
-            payload = jwt.decode(data, settings.secret_key, settings.algorithm)
-            return payload,data
-        except JWTError as e:
-            raise HTTPException(status_code=401, detail="Invalid session") from e
-    return None
-
 def checkBlockedSessions(request: Request, items: list):
     """Ensures that none of the blocked cookies are present in the request."""
     for cookie in items:

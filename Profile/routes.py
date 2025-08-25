@@ -6,3 +6,7 @@ Profile = APIRouter(prefix='/profile', dependencies=[Depends(checkUser)])
 @Profile.get('/home')
 async def home(request: Request):
     return await profile(request)
+
+@Profile.get('/user/{username}')
+def page():
+    pass

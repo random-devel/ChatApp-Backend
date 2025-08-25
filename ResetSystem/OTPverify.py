@@ -30,9 +30,14 @@ async def SendMail(OTP: str, targetEmail: str):
     msg["Subject"] = "Your OTP Code"
     msg["From"] = "arsiconanony@gmail.com"
     msg["To"] = targetEmail
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login("arsiconanony@gmail.com", settings.app_password)
-        smtp.send_message(msg)
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login("arsiconanony@gmail.com", settings.app_password)
+            smtp.send_message(msg)
+    except Exception as e:
+        print("Email sending failed:", str(e))  # Optional logging
+        raise HTTPException(status_code=500, detail="Failed to send OTP email")
 
 async def verifyOTP(userOTP: str, username: Type[str]):
     """Verifies the provided OTP against the stored hashed OTP."""

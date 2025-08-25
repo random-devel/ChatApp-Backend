@@ -1,9 +1,0 @@
-first we will make orm for the data that not always change
-
-we will make the user information to be jwt 
-
-return the otp from jwt to just normal hash
-
-fix the blocked users logic
-
-, for now we will make the frontend
