@@ -12,7 +12,7 @@ from Authentication.DuplicatedOpreations import delHandler, insertHandler, fetch
 async def insertOTP(username: str, email: str):
     """Generates an OTP, sends it by email, hashes it, and stores it in the database."""
     OTP = str(randbelow(100000)).zfill(6)
-    await SendMail(OTP, email)
+    SendMail(OTP, email)
     hashedOTP = argon2.hash(OTP)
     expire_time = datetime.utcnow() + timedelta(minutes=10)
     await insertHandler(
@@ -23,7 +23,7 @@ async def insertOTP(username: str, email: str):
         expireAt=expire_time
     )
 
-async def SendMail(OTP: str, targetEmail: str):
+def SendMail(OTP: str, targetEmail: str):
     """Sends the OTP code via email."""
     msg = EmailMessage()
     msg.set_content(f"Your OTP is {OTP}. Do not share it with anyone. It expires in 5 minutes.")

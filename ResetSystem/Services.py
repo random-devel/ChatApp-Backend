@@ -11,7 +11,7 @@ async def AuthResetPassword(username: str, response: Response, request: Request)
     Initiates password reset by sending an OTP and creating a stage1 session.
     """
     blocked_list = ["stage1", "sessionId", "stage2", "AdminSession"]
-    checkBlockedSessions(request, blocked_list)
+    await checkBlockedSessions(request, blocked_list)
     if user:= await fetch(UserCred,username=username):
         if OTP:= await fetch(OTPdocuments,username=username):
             raise HTTPException(401,detail='complete the reset password proccess')
@@ -25,7 +25,7 @@ async def AuthResetPassword(username: str, response: Response, request: Request)
 async def AuthOTP(OTP: str, request: Request, response: Response):
     """Verifies the OTP and creates a stage2 session."""
 
-    checkBlockedSessions(request, ["sessionId", "stage2", "AdminSession"])
+    await checkBlockedSessions(request, ["sessionId", "stage2", "AdminSession"])
 
     if StageData:= await VerifyStageSession(TempStage1,'stage1',request):
         await verifyOTP(OTP, StageData.get('username'))  # type: ignore
@@ -40,7 +40,7 @@ async def ResetPasswd(newpassword: str, request: Request, response: Response):
     """
     Completes password reset by updating the user's password and invalidating temporary sessions.
     """
-    checkBlockedSessions(request, ["AdminSession", "sessionId",'stage1'])
+    await checkBlockedSessions(request, ["AdminSession", "sessionId",'stage1'])
 
     if stageData:= await VerifyStageSession(TempStage2,'stage2',request):
         newpasswd = argon2.hash(newpassword)

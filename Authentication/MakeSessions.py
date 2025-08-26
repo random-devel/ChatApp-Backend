@@ -65,7 +65,7 @@ async def CreateSessions(data: dict, response: Response, expiresMinutes: int, ke
     except JWTError as e:
         raise HTTPException(status_code=501, detail="Session creation failed") from e
 
-def checkBlockedSessions(request: Request, items: list):
+async def checkBlockedSessions(request: Request, items: list):
     """Ensures that none of the blocked cookies are present in the request."""
     for cookie in items:
         if request.cookies.get(cookie):
