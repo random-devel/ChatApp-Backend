@@ -15,7 +15,8 @@ from Authentication.MongoODM import (
     TempStage1,
     TempStage2,
     Sessions,
-    AdminSessions
+    AdminSessions,
+    BlockedUsers
 )
 
 app = FastAPI()
@@ -49,7 +50,8 @@ async def startup_event():
             TempStage1,
             TempStage2,
             Sessions,
-            AdminSessions
+            AdminSessions,
+            BlockedUsers
         ]
     )
 
