@@ -39,8 +39,10 @@ async def insertOTP(data: INSERTotp):
         )
     except Exception:
         raise HTTPException(501, detail='failed to insert the otp')
-    
-    await SendMail(SendMails(OTP=OTP, TargetMail=data.email))
+    try:
+        await SendMail(SendMails(OTP=OTP, TargetMail=data.email))
+    except Exception as e:
+        raise HTTPException(501, detail=f'failed to send the otp: {str(e)}')
 
 async def SendMail(data: SendMails):
     html_body = f"""
