@@ -5,6 +5,7 @@ from Authentication.MakeSessions import checkBlockedSessions
 from Authentication.MongoODM import UserCred, TempStage1, TempStage2, OTPdocuments
 from Authentication.DuplicatedOpreations import fetch,delHandler,updateHandler
 from .MakeStages import createStageSession, VerifyStageSession
+from .Models import INSERTotp, VerifyOTP
 
 async def AuthResetPassword(username: str, response: Response, request: Request):
     """
@@ -15,8 +16,8 @@ async def AuthResetPassword(username: str, response: Response, request: Request)
     if user:= await fetch(UserCred,username=username):
         if OTP:= await fetch(OTPdocuments,username=username):
             raise HTTPException(401,detail='complete the reset password proccess')
-        
-        await insertOTP(username, user.get('email')) # type: ignore
+
+        await insertOTP(INSERTotp(username=username, email=user.get('email')))  # type: ignore
 
         await createStageSession(TempStage1,'stage1',username,response)
     else:
@@ -28,7 +29,7 @@ async def AuthOTP(OTP: str, request: Request, response: Response):
     await checkBlockedSessions(request, ["sessionId", "stage2", "AdminSession"])
 
     if StageData:= await VerifyStageSession(TempStage1,'stage1',request):
-        await verifyOTP(OTP, StageData.get('username'))  # type: ignore
+        await verifyOTP(VerifyOTP(username=StageData.get('username'), otp=OTP)) # type: ignore
         await createStageSession(TempStage2,'stage2',StageData.get('username'),response) # type: ignore
         await delHandler(TempStage1,username=StageData.get('username'))
         response.delete_cookie('stage1')

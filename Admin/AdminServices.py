@@ -3,7 +3,7 @@ from Authentication.MongoODM import BlockedUsers,UserInfo,UserCred,Sessions
 from datetime import datetime, timedelta
 from Authentication.AuthProcess import AuthSessions
 from Authentication.DuplicatedOpreations import fetch, updateHandler, insertHandler, delHandler
-from .ValidationModels import UpdateRole, BlockUser
+from .ValidationModels import UpdateRoleSchema, BlockUser
 from beanie.exceptions import DocumentNotFound, WrongDocumentUpdateStrategy, DocumentWasNotSaved
 from pymongo.errors import DuplicateKeyError
 
@@ -17,7 +17,7 @@ async def fetchUsers():
     count = await UserInfo.find_all().count()
     return count
 
-async def UpdateUsersRole(updateRole: UpdateRole):
+async def UpdateUsersRole(updateRole: UpdateRoleSchema):
     try:
         await updateHandler(UserCred,{'username':updateRole.username},role=updateRole.role)
     except DocumentNotFound:

@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends
 from Authentication.AuthProcess import AuthAdmin
 from .AdminServices import UpdateUsersRole, fetchUsers, BlockUsers, checkUSER
-from .ValidationModels import BlockUser, UpdateRole
+from .ValidationModels import BlockUser, UpdateRoleSchema
 
-Admin = APIRouter(dependencies=[Depends(AuthAdmin),Depends(checkUSER)])
+Admin = APIRouter(dependencies=[Depends(AuthAdmin),Depends(checkUSER)], prefix='/Admin')
+
+@Admin.get('/check')
+async def check():
+    return {"status": "Admin route is working"}
 
 @Admin.get('/dashboard')
 async def dashboard():
@@ -11,7 +15,7 @@ async def dashboard():
     return count
 
 @Admin.put('/ChangeUsersRole')
-async def updateRole(Schema: UpdateRole):
+async def updateRole(Schema: UpdateRoleSchema):
     await UpdateUsersRole(Schema)
 
 @Admin.post('/BlockUser')

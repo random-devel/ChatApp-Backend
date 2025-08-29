@@ -23,3 +23,6 @@ async def verifyCookieKey(key: str, request: Request) -> dict | None:
 
 async def profile(request: Request):
     return await verifyCookieKey('userInfo',request)
+
+async def getUsersProfile(username):
+    pass

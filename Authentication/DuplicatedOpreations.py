@@ -2,6 +2,7 @@ from beanie import Document
 from typing import Any,Optional,Type
 from pymongo.errors import DuplicateKeyError
 from fastapi import HTTPException
+from beanie.exceptions import DocumentNotFound
 
 async def fetch(Collection: Type[Document], **filters: Any) -> Optional[dict]:
     """that function filter by the values the user submit"""
@@ -28,7 +29,7 @@ async def delHandler(Collection: Type[Document],**filters):
 async def updateHandler(Collection: Type[Document],filter: dict,**updates: Any) -> bool:
     doc = await Collection.find_one(filter)
     if not doc:
-        return False
+        raise DocumentNotFound
     
     for key, value in updates.items():
         if key in doc.model_fields:
